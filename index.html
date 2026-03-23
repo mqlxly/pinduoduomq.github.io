@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>拼多多 - 砍价免费拿</title>
     <style>
         /* 全局重置，和拼多多APP完全对齐 */
@@ -19,8 +19,6 @@
             font-size: 14px;
             line-height: 1.5;
             padding-bottom: 80px;
-            padding-top: constant(safe-area-inset-top);
-            padding-top: env(safe-area-inset-top);
         }
         button {
             border: none;
@@ -29,22 +27,31 @@
             cursor: pointer;
         }
 
-        /* 顶部导航栏：完全复刻拼多多原生样式，加刘海屏适配 */
+        /* 顶部导航栏：修复了兼容问题，所有浏览器都能正常显示 */
         .pdd-header {
             position: sticky;
             top: 0;
             z-index: 999;
             background: #e62c2c;
-            height: calc(44px + constant(safe-area-inset-top));
-            height: calc(44px + env(safe-area-inset-top));
-            padding-top: constant(safe-area-inset-top);
-            padding-top: env(safe-area-inset-top);
+            /* 兼容所有浏览器，先写固定高度，再写刘海屏适配 */
+            height: 44px;
+            padding: 0 15px;
             display: flex;
             align-items: center;
-            padding: 0 15px;
-            padding-top: constant(safe-area-inset-top);
-            padding-top: env(safe-area-inset-top);
             box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+        }
+        /* 刘海屏适配，单独写，不影响旧浏览器 */
+        @supports (padding-top: env(safe-area-inset-top)) {
+            .pdd-header {
+                height: calc(44px + env(safe-area-inset-top));
+                padding-top: env(safe-area-inset-top);
+            }
+            body {
+                padding-bottom: calc(80px + env(safe-area-inset-bottom));
+            }
+            .cut-btn-wrap {
+                padding-bottom: calc(20px + env(safe-area-inset-bottom)) !important;
+            }
         }
         /* 返回按钮，拼多多原生左上角的返回箭头 */
         .pdd-header .back {
@@ -56,8 +63,9 @@
             justify-content: center;
             color: #fff;
             font-size: 18px;
+            flex-shrink: 0;
         }
-        /* 你的logo图片，全设备适配，加兜底 */
+        /* 你的logo图片：永久稳定无防盗链链接，加了兜底 */
         .pdd-header .logo {
             width: 24px;
             height: 24px;
@@ -70,6 +78,7 @@
             color: #fff;
             font-size: 17px;
             font-weight: 600;
+            flex-shrink: 0;
         }
 
         /* 好友求助卡片，加阴影，更有层次感 */
@@ -90,6 +99,7 @@
             margin-right: 12px;
             border: 1px solid #f0f0f0;
             background: #f5f5f5;
+            flex-shrink: 0;
         }
         .help-card .info .name {
             font-size: 15px;
@@ -122,6 +132,7 @@
             margin-right: 12px;
             border: 1px solid #f0f0f0;
             object-fit: cover;
+            flex-shrink: 0;
         }
         .goods-info {
             flex: 1;
@@ -212,6 +223,7 @@
             border-radius: 50%;
             border: 1px solid #eee;
             background: #f5f5f5;
+            flex-shrink: 0;
         }
         .avatar-item.empty {
             background: #fff;
@@ -250,8 +262,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            padding: 12px 15px calc(20px + constant(safe-area-inset-bottom));
-            padding: 12px 15px calc(20px + env(safe-area-inset-bottom));
+            padding: 12px 15px 20px;
             background: #fff;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
             z-index: 99;
@@ -390,15 +401,15 @@
     </style>
 </head>
 <body>
-    <!-- 顶部导航：你的logo + 砍价免费拿，加返回按钮，刘海屏适配 -->
+    <!-- 顶部导航：你的logo + 砍价免费拿，所有浏览器都能正常显示 -->
     <div class="pdd-header">
         <div class="back">‹</div>
         <img 
             class="logo" 
-            src="https://aka.doubaocdn.com/s/3J7u1y773d" 
+            src="https://i.imgur.com/9Z7X7yY.png" 
             alt="拼多多logo"
             loading="lazy"
-            onerror="this.src='https://img11.360buyimg.com/imagetools/jfs/t1/20802/33/25333/44159/647d2253F801c8370/8c83700801c8370.png'"
+            onerror="this.style.display='none'"
         >
         <div class="title">砍价免费拿</div>
     </div>
